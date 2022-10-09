@@ -1,0 +1,1 @@
+const kIssueFile = '.issue.md';
