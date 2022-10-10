@@ -1,9 +1,8 @@
 /// Support for doing something awesome.
 ///
 /// More dartdocs go here.
-library report_cli;
+library issue;
 
-export 'src/issue_builders.dart' show buildIssueAndOpen, buildIssue;
+export 'src/issue.dart';
 export 'src/models/models.dart';
-
-// TODO: Export any libraries intended for clients of this package.
+export 'src/exceptions.dart';

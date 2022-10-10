@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:ansi_styles/ansi_styles.dart';
+import 'package:interact/interact.dart' as interact;
+import 'package:issue/issue.dart';
 import 'package:path/path.dart' as path;
 
 Future<String> promptUserInputViaFile(
@@ -63,11 +66,43 @@ void openInBrowser(String url) {
   }
 }
 
-extension IfNonNull on Object? {
-  R? ifNonNull<T, R>(R Function(T) callback) {
-    if (this != null) {
-      return callback(this as T);
-    }
-    return null;
-  }
+bool promptBool(
+  String prompt, {
+  bool defaultValue = true,
+}) {
+  return interact.Confirm(
+    prompt: prompt,
+    defaultValue: defaultValue,
+  ).interact();
+}
+
+interact.SpinnerState buildCommandSpinner() {
+  return interact.Spinner(
+    icon: AnsiStyles.green('✔'),
+    rightPrompt: (done) => done ? 'Done' : 'Collecting system information',
+  ).interact();
+}
+
+interact.ProgressState buildUserProgressState(IssueConfig config) {
+  final userDrivenSections = config.template.sections
+      .where((section) => section.isDrivenBy == DrivenBy.user)
+      .toList();
+  final padding = '  ';
+
+  int totalSteps = userDrivenSections.length;
+  List<String> prompts = [
+    '${config.template.titlePrompt}$padding',
+    for (final section in userDrivenSections) '${section.prompt}$padding',
+  ];
+
+  return interact.Progress(
+    length: totalSteps,
+    leftPrompt: (step) => prompts[step],
+    rightPrompt: (step) => '${padding}Step: $step/$totalSteps',
+  ).interact();
+}
+
+extension IsCase on String {
+  bool get isUpperCase => this == toUpperCase();
+  bool get isLowerCase => this == toLowerCase();
 }

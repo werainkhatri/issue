@@ -2,7 +2,7 @@ import 'package:issue/src/models/issue_section/issue_section.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('IssueSection.userDriven', () {
+  test('IssueSection.userDriven with null prompt', () {
     const section = TestUserDrivenIssueSection();
     expect(section.heading, 'test heading');
     expect(section.content, 'test content');
@@ -12,9 +12,16 @@ test heading
 test content
 
 ''');
-    expect(section.isDrivenBy, IssueSectionDrivenBy.user);
+    expect(section.isDrivenBy, DrivenBy.user);
     expect(section.placeholder, isNull);
     expect(section.command, isNull);
+    expect(section.prompt, 'Test user driven');
+  });
+
+  test('IssueSection.userDriven with non-null prompt', () {
+    const section = TestUserDrivenIssueSection('prompt');
+
+    expect(section.prompt, 'prompt');
   });
 
   group('IssueSection.commandDriven', () {
@@ -26,6 +33,7 @@ test content
       expect(section.content, 'this is a placeholder');
       expect(section.placeholder, 'placeholder');
       expect(section.command, ['command']);
+      expect(section.prompt, '');
     });
 
     test('throws when placeholder is empty', () {
@@ -76,14 +84,15 @@ test heading
 test content
 
 ''');
-    expect(section.isDrivenBy, IssueSectionDrivenBy.none);
+    expect(section.isDrivenBy, DrivenBy.none);
     expect(section.placeholder, isNull);
     expect(section.command, isNull);
+    expect(section.prompt, '');
   });
 
-  test('DetailsIssueSection.userDriven', () {
+  test('DetailsIssueSection.userDriven with null prompt', () {
     const section = TestUserDrivenDetailsIssueSection();
-    expect(section.isDrivenBy, IssueSectionDrivenBy.user);
+    expect(section.isDrivenBy, DrivenBy.user);
     expect(section.content, '''
 <details>
 <summary>test summary</summary>
@@ -100,11 +109,18 @@ test details
 ''');
     expect(section.placeholder, isNull);
     expect(section.command, isNull);
+    expect(section.prompt, 'Test user driven details');
+  });
+
+  test('DetailsIssueSection.userDriven with non-null prompt', () {
+    const section = TestUserDrivenDetailsIssueSection('prompt');
+
+    expect(section.prompt, 'prompt');
   });
 
   test('DetailsIssueSection.commandDriven', () {
     final section = TestCommandDrivenDetailsIssueSection();
-    expect(section.isDrivenBy, IssueSectionDrivenBy.command);
+    expect(section.isDrivenBy, DrivenBy.command);
     expect(section.content, '''
 <details>
 <summary>test summary</summary>
@@ -121,12 +137,17 @@ this is a placeholder
 ''');
     expect(section.placeholder, 'placeholder');
     expect(section.command, ['command']);
+    expect(section.prompt, '');
   });
 }
 
 class TestUserDrivenIssueSection extends IssueSection {
-  const TestUserDrivenIssueSection()
-      : super.userDriven(heading: 'test heading', content: 'test content');
+  const TestUserDrivenIssueSection([String? prompt])
+      : super.userDriven(
+          heading: 'test heading',
+          content: 'test content',
+          prompt: prompt,
+        );
 }
 
 class TestCommandDrivenIssueSection extends IssueSection {
@@ -143,10 +164,11 @@ class TestNoneDrivenIssueSection extends IssueSection {
 }
 
 class TestUserDrivenDetailsIssueSection extends DetailsIssueSection {
-  const TestUserDrivenDetailsIssueSection()
+  const TestUserDrivenDetailsIssueSection([String? prompt])
       : super.userDriven(
           summary: 'test summary',
           details: 'test details',
+          prompt: prompt,
         );
 }
 

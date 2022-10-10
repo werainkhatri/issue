@@ -2,6 +2,7 @@ import 'package:issue/src/models/issue_section/issue_section.dart';
 
 abstract class IssueTemplate {
   final String titlePlaceholder;
+  final String titlePrompt;
   final List<String> labels;
   final List<String> assignees;
 
@@ -11,27 +12,30 @@ abstract class IssueTemplate {
   /// Sections of the issue.
   final List<IssueSection> sections;
 
-  bool get requiresFlutterApp;
+  final bool requiresFlutterApp;
 
   const IssueTemplate({
-    this.titlePlaceholder = 'Please enter a suitable title',
-    this.labels = const [],
     this.assignees = const [],
     this.heading,
-    required this.sections,
+    this.labels = const [],
+    this.sections = const [],
+    this.requiresFlutterApp = false,
+    this.titlePlaceholder = 'Please enter a suitable title.',
+    this.titlePrompt = 'Issue title',
   });
 }
 
 class SimpleBugReportIssueTemplate extends IssueTemplate {
-  const SimpleBugReportIssueTemplate({
-    super.titlePlaceholder,
-    super.labels = const [],
+  SimpleBugReportIssueTemplate({
     super.assignees = const [],
+    super.labels = const [],
+    super.titlePlaceholder,
+    super.titlePrompt,
   }) : super(
           heading: 'Bug Report',
-          sections: const [
-            DescriptionIssueSection(),
+          sections: [
             CombinedIssueSection(sections: [
+              DescriptionIssueSection(),
               StepsToReproduceIssueSection(),
               ExpectedBehaviorIssueSection(),
               ActualResultsIssueSection(),
@@ -41,36 +45,35 @@ class SimpleBugReportIssueTemplate extends IssueTemplate {
             AdditionalContextIssueSection(),
           ],
         );
-
-  @override
-  bool get requiresFlutterApp => false;
 }
 
 class FlutterBugReportIssueTemplate extends IssueTemplate {
   final bool isFlutterDoctorVerbose;
 
   FlutterBugReportIssueTemplate({
-    super.titlePlaceholder,
+    super.assignees = const [],
     super.heading,
     super.labels = const [],
-    super.assignees = const [],
+    super.titlePlaceholder,
+    super.titlePrompt,
     this.isFlutterDoctorVerbose = false,
   }) : super(
           sections: [
-            DescriptionIssueSection(),
-            CombinedIssueSection(sections: [
-              StepsToReproduceIssueSection(),
-              ExpectedBehaviorIssueSection(),
-              ActualResultsIssueSection(),
-            ]),
+            CombinedIssueSection(
+              sections: [
+                DescriptionIssueSection(),
+                StepsToReproduceIssueSection(),
+                ExpectedBehaviorIssueSection(),
+                ActualResultsIssueSection(),
+              ],
+              prompt: 'Issue Details',
+            ),
             SampleDartCodeIssueSection(),
             DividerIssueSection(),
             AdditionalContextIssueSection(),
             DividerIssueSection(),
             FlutterDoctorIssueSection(verbose: isFlutterDoctorVerbose),
           ],
+          requiresFlutterApp: true,
         );
-
-  @override
-  bool get requiresFlutterApp => true;
 }

@@ -6,6 +6,6 @@ void main() {
     const section = DividerIssueSection();
     expect(section.heading, null);
     expect(section.content, '---');
-    expect(section.isDrivenBy, IssueSectionDrivenBy.none);
+    expect(section.isDrivenBy, DrivenBy.none);
   });
 }

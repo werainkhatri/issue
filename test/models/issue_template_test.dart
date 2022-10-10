@@ -8,8 +8,8 @@ void main() {
     expect(template.assignees, []);
     expect(template.labels, []);
     expect(template.sections, <IssueSection>[
-      DescriptionIssueSection(),
       CombinedIssueSection(sections: [
+        DescriptionIssueSection(),
         StepsToReproduceIssueSection(),
         ExpectedBehaviorIssueSection(),
         ActualResultsIssueSection(),
@@ -19,16 +19,18 @@ void main() {
       AdditionalContextIssueSection(),
     ]);
     expect(template.requiresFlutterApp, false);
+    expect(template.titlePlaceholder, 'Please enter a suitable title.');
+    expect(template.titlePrompt, 'Issue title');
   });
 
   test(FlutterBugReportIssueTemplate, () {
     final template = FlutterBugReportIssueTemplate();
-    expect(template.heading, null);
     expect(template.assignees, []);
+    expect(template.heading, null);
     expect(template.labels, []);
     expect(template.sections, <IssueSection>[
-      DescriptionIssueSection(),
       CombinedIssueSection(sections: [
+        DescriptionIssueSection(),
         StepsToReproduceIssueSection(),
         ExpectedBehaviorIssueSection(),
         ActualResultsIssueSection(),
@@ -40,5 +42,7 @@ void main() {
       FlutterDoctorIssueSection(),
     ]);
     expect(template.requiresFlutterApp, true);
+    expect(template.titlePlaceholder, 'Please enter a suitable title.');
+    expect(template.titlePrompt, 'Issue title');
   });
 }

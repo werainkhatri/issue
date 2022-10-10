@@ -1,14 +1,14 @@
 import 'issue_section.dart';
 
 class DescriptionIssueSection extends IssueSection {
-  const DescriptionIssueSection()
+  const DescriptionIssueSection({super.prompt})
       : super.userDriven(
             heading: '### Describe the bug',
             content: 'A clear and concise description of what the bug is.');
 }
 
 class StepsToReproduceIssueSection extends IssueSection {
-  const StepsToReproduceIssueSection()
+  const StepsToReproduceIssueSection({super.prompt})
       : super.userDriven(heading: '### Steps to reproduce', content: '''
 <!-- Please include full steps to reproduce the issue. -->
 
@@ -18,21 +18,21 @@ class StepsToReproduceIssueSection extends IssueSection {
 }
 
 class ExpectedBehaviorIssueSection extends IssueSection {
-  const ExpectedBehaviorIssueSection()
+  const ExpectedBehaviorIssueSection({super.prompt})
       : super.userDriven(
             heading: '### Expected behavior',
             content: '<!-- what did you want to see? -->');
 }
 
 class ActualResultsIssueSection extends IssueSection {
-  const ActualResultsIssueSection()
+  const ActualResultsIssueSection({super.prompt})
       : super.userDriven(
             heading: '### Actual results',
             content: '<!-- what did you see? -->');
 }
 
 class AdditionalContextIssueSection extends IssueSection {
-  const AdditionalContextIssueSection()
+  const AdditionalContextIssueSection({super.prompt})
       : super.userDriven(
             heading: '### Additional context',
             content: '<!-- Add any other context about the problem here. -->');
@@ -47,6 +47,7 @@ class CodeDetailsIssueSection extends DetailsIssueSection {
     this.comment,
     required super.summary,
     required this.language,
+    super.prompt,
   }) : super.userDriven(details: '''
 ${_comment(comment)}```$language
 
@@ -57,7 +58,7 @@ ${_comment(comment)}```$language
 }
 
 class SampleDartCodeIssueSection extends DetailsIssueSection {
-  const SampleDartCodeIssueSection({super.heading})
+  const SampleDartCodeIssueSection({super.heading, super.prompt})
       : super.userDriven(summary: 'Sample Code', details: '''
 <!-- Please include a minimal code sample that demonstrates the issue. -->
 
@@ -72,10 +73,13 @@ class SampleDartCodeIssueSection extends DetailsIssueSection {
 /// speed up the process.
 class CombinedIssueSection extends IssueSection {
   final List<IssueSection> sections;
+  final String? _prompt;
 
-  const CombinedIssueSection({required this.sections})
-      : super.userDriven(heading: '', content: ' ');
+  CombinedIssueSection({required this.sections, String? prompt})
+      : _prompt = prompt,
+        assert(sections.isNotEmpty, 'Cannot combine empty [sections].'),
+        super.userDriven(content: sections.map((e) => e.build()).join());
 
   @override
-  String build() => sections.map((e) => e.build()).join();
+  String get prompt => _prompt ?? sections.map((e) => e.prompt).join(', ');
 }

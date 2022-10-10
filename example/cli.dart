@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:issue/issue.dart';
 
 void main(List<String> args) async {
@@ -7,14 +5,13 @@ void main(List<String> args) async {
     template: FlutterBugReportIssueTemplate(isFlutterDoctorVerbose: true),
     tracker: GitHubIssueTracker(
       organization: 'werainkhatri',
-      repository: 'werainkhatri',
+      repository: 'issue',
     ),
-    issueFile: '.myissue.md',
   );
 
   try {
-    buildIssueAndOpen(config);
-  } on InterruptException catch (e) {
-    stdout.add(('${e.message}\n').codeUnits);
+    await buildIssueAndOpen(config);
+  } on UserInterruptException catch (e) {
+    print(e);
   }
 }

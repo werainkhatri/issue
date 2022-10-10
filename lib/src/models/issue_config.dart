@@ -10,11 +10,11 @@ class IssueConfig {
   final IssueTracker tracker;
 
   /// The name of the file that will be used as prompt to get user input.
-  final String issueFile;
+  final String issueFileName;
 
   const IssueConfig({
     required this.template,
     required this.tracker,
-    this.issueFile = kIssueFile,
+    this.issueFileName = kIssueFile,
   });
 }
