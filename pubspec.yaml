@@ -1,6 +1,6 @@
 name: issue
 description: A CLI tool to help cli package authors make raising issues like bug reports more interactive for their users.
-version: 0.0.1
+version: 0.0.1+1
 repository: https://www.github.com/werainkhatri/issue
 
 environment:

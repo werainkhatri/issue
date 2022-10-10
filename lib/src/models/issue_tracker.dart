@@ -27,12 +27,15 @@ class GitHubIssueTracker extends IssueTracker {
     required this.organization,
     required this.repository,
     this.template,
-    Map<String, String> customParameters = const {},
+    Map<String, String>? customParameters,
   }) : super(
           website: 'github.com',
           endpoint: '$organization/$repository/issues/new',
-          customParameters: template != null
-              ? (customParameters..putIfAbsent('template', () => template))
-              : customParameters,
+          customParameters: (() {
+            final value = customParameters ?? <String, String>{};
+            return template != null
+                ? (value..putIfAbsent('template', () => template))
+                : value;
+          })(),
         );
 }

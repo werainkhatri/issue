@@ -27,8 +27,8 @@ abstract class IssueTemplate {
 
 class SimpleBugReportIssueTemplate extends IssueTemplate {
   SimpleBugReportIssueTemplate({
-    super.assignees = const [],
-    super.labels = const [],
+    super.assignees,
+    super.labels,
     super.titlePlaceholder,
     super.titlePrompt,
   }) : super(
@@ -51,9 +51,9 @@ class FlutterBugReportIssueTemplate extends IssueTemplate {
   final bool isFlutterDoctorVerbose;
 
   FlutterBugReportIssueTemplate({
-    super.assignees = const [],
+    super.assignees,
     super.heading,
-    super.labels = const [],
+    super.labels,
     super.titlePlaceholder,
     super.titlePrompt,
     this.isFlutterDoctorVerbose = false,
