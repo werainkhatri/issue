@@ -9,9 +9,7 @@ void main() {
     expect(section.build(), '''
 test heading
 
-test content
-
-''');
+test content''');
     expect(section.isDrivenBy, DrivenBy.user);
     expect(section.placeholder, isNull);
     expect(section.command, isNull);
@@ -81,9 +79,7 @@ test content
     expect(section.build(), '''
 test heading
 
-test content
-
-''');
+test content''');
     expect(section.isDrivenBy, DrivenBy.none);
     expect(section.placeholder, isNull);
     expect(section.command, isNull);
@@ -104,9 +100,7 @@ test details
 <summary>test summary</summary>
 
 test details
-</details>
-
-''');
+</details>''');
     expect(section.placeholder, isNull);
     expect(section.command, isNull);
     expect(section.prompt, 'Test user driven details');
@@ -132,9 +126,7 @@ this is a placeholder
 <summary>test summary</summary>
 
 this is a placeholder
-</details>
-
-''');
+</details>''');
     expect(section.placeholder, 'placeholder');
     expect(section.command, ['command']);
     expect(section.prompt, '');

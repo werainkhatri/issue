@@ -135,9 +135,7 @@ A clear and concise description of what the bug is.
 
 ### Actual results
 
-<!-- what did you see? -->
-
-''');
+<!-- what did you see? -->''');
     expect(section.isDrivenBy, DrivenBy.user);
     expect(
         section.prompt,

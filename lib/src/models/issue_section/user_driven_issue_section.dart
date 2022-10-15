@@ -1,3 +1,5 @@
+import 'package:issue/src/utils.dart';
+
 import 'issue_section.dart';
 
 class DescriptionIssueSection extends IssueSection {
@@ -67,7 +69,7 @@ class SampleDartCodeIssueSection extends DetailsIssueSection {
 ```''');
 }
 
-/// Combined issue sections will be shown in one user prompt.
+/// Combined user driven issue sections will be shown in one file prompt.
 ///
 /// This is to reduce the number of prompts to the user and hence
 /// speed up the process.
@@ -78,7 +80,11 @@ class CombinedIssueSection extends IssueSection {
   CombinedIssueSection({required this.sections, String? prompt})
       : _prompt = prompt,
         assert(sections.isNotEmpty, 'Cannot combine empty [sections].'),
-        super.userDriven(content: sections.map((e) => e.build()).join());
+        assert(sections.every((element) => element.isDrivenBy == DrivenBy.user),
+            'Cannot combine non-user driven sections.'),
+        super.userDriven(
+          content: joinBuiltIssueSections(sections.map((e) => e.build())),
+        );
 
   @override
   String get prompt => _prompt ?? sections.map((e) => e.prompt).join(', ');

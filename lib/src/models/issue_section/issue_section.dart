@@ -75,7 +75,10 @@ abstract class IssueSection extends Equatable {
         _prompt = null,
         assert(content != '', '[content] cannot be empty.');
 
-  String build() => '${heading != null ? '$heading\n\n' : ''}$content\n\n';
+  /// Builds the section with heading, if present, and content.
+  ///
+  /// This is what will be shown to the user.
+  String build() => '${heading != null ? '$heading\n\n' : ''}$content';
 
   @override
   List<Object?> get props =>

@@ -59,56 +59,40 @@ class IssueBuilder {
   }
 
   Future<String> _buildBody() async {
-    final List<String> body = List.filled(config.template.sections.length, '');
+    final List<String> bodySections =
+        List.filled(config.template.sections.length, '');
 
-    Future<void> buildUserDrivenIssueSections() async {
+    Future<void> buildIssueSections({required bool onlyUserDriven}) async {
       for (int i = 0; i < config.template.sections.length; i++) {
         final section = config.template.sections[i];
 
-        if (section.isDrivenBy != DrivenBy.user) continue;
+        if ((section.isDrivenBy == DrivenBy.user) != onlyUserDriven) continue;
 
         final String sectionBody = await _buildIssueSection(section);
 
         if (sectionBody.isEmpty) {
-          // TODO(werainkhatri): better prompt?
           throw UserInterruptException(section.prompt);
         }
 
-        // section built successfully.
-        _userProgressState.increase(1);
-
-        body[i] = sectionBody;
-      }
-    }
-
-    Future<void> buildOtherIssueSections() async {
-      for (int i = 0; i < config.template.sections.length; i++) {
-        final section = config.template.sections[i];
-
-        if (section.isDrivenBy == DrivenBy.user) continue;
-
-        final String sectionBody = await _buildIssueSection(section);
-
-        if (sectionBody.isEmpty) {
-          // TODO(werainkhatri): better prompt?
-          throw UserInterruptException(section.prompt);
+        if (onlyUserDriven) {
+          // section built successfully.
+          _userProgressState.increase(1);
         }
 
-        body[i] = sectionBody;
+        bodySections[i] = sectionBody;
       }
     }
 
-    await buildUserDrivenIssueSections();
-
+    // build ueser driven issue sections first.
+    await buildIssueSections(onlyUserDriven: true);
     _userProgressState.done();
 
+    // then build other (command and none driven) issue sections.
     final spinner = buildCommandSpinner();
-
-    await buildOtherIssueSections();
-
+    await buildIssueSections(onlyUserDriven: false);
     spinner.done();
 
-    return body.join('');
+    return joinBuiltIssueSections(bodySections);
   }
 
   Future<String> _buildIssueSection(IssueSection section) async {
@@ -118,9 +102,7 @@ class IssueBuilder {
       throw UnexpectedException('Issue section $section built empty string.');
     }
 
-    if (section.isDrivenBy == DrivenBy.none) {
-      return section.build();
-    } else if (section.isDrivenBy == DrivenBy.command) {
+    if (section.isDrivenBy == DrivenBy.command) {
       ProcessResult result = await Process.run(
         section.command!.first,
         section.command!.sublist(1),
@@ -133,9 +115,14 @@ class IssueBuilder {
       String output = result.stdout.toString();
 
       return section.build().replaceFirst(section.placeholder!, output);
-    } else {
+    } else if (section.isDrivenBy == DrivenBy.user) {
       return await promptUserInputViaFile(
-          section.build(), config.issueFileName);
+        section.build(),
+        config.issueFileName,
+      );
+    } else {
+      // none driven issue section.
+      return section.build();
     }
   }
 

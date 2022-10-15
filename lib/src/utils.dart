@@ -102,6 +102,9 @@ interact.ProgressState buildUserProgressState(IssueConfig config) {
   ).interact();
 }
 
+String joinBuiltIssueSections(Iterable<String> bodySections) =>
+    bodySections.join('\n\n');
+
 extension IsCase on String {
   bool get isUpperCase => this == toUpperCase();
   bool get isLowerCase => this == toLowerCase();
