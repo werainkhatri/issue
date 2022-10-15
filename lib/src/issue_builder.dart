@@ -35,6 +35,7 @@ class IssueBuilder {
       config.tracker.website,
       config.tracker.endpoint,
       <String, String>{
+        'assignees': config.template.assignees.join(','),
         'labels': config.template.labels.join(', '),
         'body': body,
         'title': title,
@@ -59,12 +60,15 @@ class IssueBuilder {
   }
 
   Future<String> _buildBody() async {
-    final List<String> bodySections =
-        List.filled(config.template.sections.length, '');
+    List<IssueSection> sections = [
+      ...config.template.sections,
+      if (config.template.credits) const CreditsIssueSection(),
+    ];
+    final List<String> bodySections = List.filled(sections.length, '');
 
     Future<void> buildIssueSections({required bool onlyUserDriven}) async {
-      for (int i = 0; i < config.template.sections.length; i++) {
-        final section = config.template.sections[i];
+      for (int i = 0; i < sections.length; i++) {
+        final section = sections[i];
 
         if ((section.isDrivenBy == DrivenBy.user) != onlyUserDriven) continue;
 

@@ -2,7 +2,11 @@ import 'package:issue/issue.dart';
 
 void main(List<String> args) async {
   IssueConfig config = IssueConfig(
-    template: FlutterBugReportIssueTemplate(isFlutterDoctorVerbose: true),
+    template: SimpleBugReportIssueTemplate(
+      assignees: ['werainkhatri'],
+      labels: ['bug'],
+      credits: true,
+    ),
     tracker: GitHubIssueTracker(
       organization: 'werainkhatri',
       repository: 'issue',

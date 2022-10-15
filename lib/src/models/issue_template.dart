@@ -14,6 +14,11 @@ abstract class IssueTemplate {
 
   final bool requiresFlutterApp;
 
+  /// Whether to add [CreditsIssueSection] at the end of the issue.
+  ///
+  /// Defaults to `false`, obviously.
+  final bool credits;
+
   const IssueTemplate({
     this.assignees = const [],
     this.heading,
@@ -22,6 +27,7 @@ abstract class IssueTemplate {
     this.requiresFlutterApp = false,
     this.titlePlaceholder = 'Please enter a suitable title.',
     this.titlePrompt = 'Issue title',
+    this.credits = false,
   });
 }
 
@@ -31,15 +37,19 @@ class SimpleBugReportIssueTemplate extends IssueTemplate {
     super.labels,
     super.titlePlaceholder,
     super.titlePrompt,
+    super.credits,
   }) : super(
           heading: 'Bug Report',
           sections: [
-            CombinedIssueSection(sections: [
-              DescriptionIssueSection(),
-              StepsToReproduceIssueSection(),
-              ExpectedBehaviorIssueSection(),
-              ActualResultsIssueSection(),
-            ]),
+            CombinedIssueSection(
+              prompt: 'Issue Details',
+              sections: [
+                DescriptionIssueSection(),
+                StepsToReproduceIssueSection(),
+                ExpectedBehaviorIssueSection(),
+                ActualResultsIssueSection(),
+              ],
+            ),
             SampleDartCodeIssueSection(),
             DividerIssueSection(),
             AdditionalContextIssueSection(),
@@ -57,16 +67,17 @@ class FlutterBugReportIssueTemplate extends IssueTemplate {
     super.titlePlaceholder,
     super.titlePrompt,
     this.isFlutterDoctorVerbose = false,
+    super.credits,
   }) : super(
           sections: [
             CombinedIssueSection(
+              prompt: 'Issue Details',
               sections: [
                 DescriptionIssueSection(),
                 StepsToReproduceIssueSection(),
                 ExpectedBehaviorIssueSection(),
                 ActualResultsIssueSection(),
               ],
-              prompt: 'Issue Details',
             ),
             SampleDartCodeIssueSection(),
             DividerIssueSection(),
