@@ -6,7 +6,9 @@ void main() {
     const section = DescriptionIssueSection();
     expect(section.heading, '### Describe the bug');
     expect(
-        section.content, 'A clear and concise description of what the bug is.');
+      section.content,
+      'A clear and concise description of what the bug is.',
+    );
     expect(section.isDrivenBy, DrivenBy.user);
     expect(section.prompt, 'Description');
   });
@@ -60,14 +62,16 @@ void main() {
   test(AdditionalContextIssueSection, () {
     const section = AdditionalContextIssueSection();
     expect(section.heading, '### Additional context');
-    expect(section.content,
-        '<!-- Add any other context about the problem here. -->');
+    expect(
+      section.content,
+      '<!-- Add any other context about the problem here. -->',
+    );
     expect(section.isDrivenBy, DrivenBy.user);
     expect(section.prompt, 'Additional context');
   });
 
   test('CodeDetailsIssueSection with comment', () {
-    final section = CodeDetailsIssueSection(
+    var section = CodeDetailsIssueSection(
       heading: '### Code',
       language: 'dart',
       summary: 'code',
@@ -89,7 +93,7 @@ void main() {
   });
 
   test('CodeDetailsIssueSection without comment', () {
-    final section = CodeDetailsIssueSection(
+    var section = CodeDetailsIssueSection(
       heading: '### Code',
       language: 'dart',
       summary: 'code',
@@ -107,7 +111,7 @@ void main() {
   });
 
   test(CombinedIssueSection, () {
-    final section = CombinedIssueSection(
+    var section = CombinedIssueSection(
       sections: [
         DescriptionIssueSection(),
         StepsToReproduceIssueSection(),

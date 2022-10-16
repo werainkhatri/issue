@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 void main() {
   group(FlutterDoctorIssueSection, () {
     test('', () {
-      final section = FlutterDoctorIssueSection();
+      var section = FlutterDoctorIssueSection();
       expect(section.content, '''
 <details>
 <summary>Flutter Doctor</summary>
@@ -17,7 +17,7 @@ PASTE FLUTTER DOCTOR OUTPUT HERE
     });
 
     test('verbose', () {
-      final section = FlutterDoctorIssueSection(verbose: true);
+      var section = FlutterDoctorIssueSection(verbose: true);
       expect(section.content, '''
 <details>
 <summary>Flutter Doctor</summary>

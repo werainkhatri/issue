@@ -1,18 +1,10 @@
-import 'dart:io';
+part of 'issue.dart';
 
-import 'package:interact/interact.dart' as interact;
-import 'package:issue/src/constants.dart';
-
-import 'exceptions.dart';
-import 'models/models.dart';
-import 'utils.dart';
-
-class IssueBuilder {
+class _IssueBuilder {
+  _IssueBuilder(this.config)
+      : _userProgressState = buildUserProgressState(config);
   final IssueConfig config;
   final interact.ProgressState _userProgressState;
-
-  IssueBuilder(this.config)
-      : _userProgressState = buildUserProgressState(config);
 
   /// Builds an issue from the given [config] and returns the URI of the issue.
   Future<Uri> build() async {
@@ -20,16 +12,16 @@ class IssueBuilder {
       assertFlutterApp(Directory.current);
     }
 
-    _introductoryHelp();
+    introductoryHelp();
 
     // without this, the progress bar will not be displayed, for some reason.
     _userProgressState.increase(0);
 
-    final title = await _buildIssueTitle();
+    var title = await buildIssueTitle();
 
-    final body = await _buildBody();
+    var body = await buildBody();
 
-    _closingComments();
+    closingComments();
 
     return Uri.http(
       config.tracker.website,
@@ -44,13 +36,16 @@ class IssueBuilder {
     );
   }
 
-  Future<String> _buildIssueTitle() async {
-    final title = await promptUserInputViaFile(
-        config.template.titlePlaceholder, config.issueFileName);
+  Future<String> buildIssueTitle() async {
+    var title = await promptUserInputViaFile(
+      config.template.titleTemplate,
+      config.issueFileName,
+    );
 
     if (title.isEmpty) {
       throw UserInterruptException(
-          'User inturrupted the process at title prompt.');
+        'User inturrupted the process at title prompt.',
+      );
     }
 
     // title built successfully.
@@ -59,20 +54,20 @@ class IssueBuilder {
     return title;
   }
 
-  Future<String> _buildBody() async {
+  Future<String> buildBody() async {
     List<IssueSection> sections = [
       ...config.template.sections,
       if (config.template.credits) const CreditsIssueSection(),
     ];
-    final List<String> bodySections = List.filled(sections.length, '');
+    var bodySections = List<String>.filled(sections.length, '');
 
     Future<void> buildIssueSections({required bool onlyUserDriven}) async {
       for (int i = 0; i < sections.length; i++) {
-        final section = sections[i];
+        var section = sections[i];
 
         if ((section.isDrivenBy == DrivenBy.user) != onlyUserDriven) continue;
 
-        final String sectionBody = await _buildIssueSection(section);
+        var sectionBody = await buildIssueSection(section);
 
         if (sectionBody.isEmpty) {
           throw UserInterruptException(section.prompt);
@@ -87,19 +82,19 @@ class IssueBuilder {
       }
     }
 
-    // build ueser driven issue sections first.
+    // build user driven issue sections first.
     await buildIssueSections(onlyUserDriven: true);
     _userProgressState.done();
 
     // then build other (command and none driven) issue sections.
-    final spinner = buildCommandSpinner();
+    var spinner = buildCommandSpinner();
     await buildIssueSections(onlyUserDriven: false);
     spinner.done();
 
     return joinBuiltIssueSections(bodySections);
   }
 
-  Future<String> _buildIssueSection(IssueSection section) async {
+  Future<String> buildIssueSection(IssueSection section) async {
     String builtSection = section.build();
 
     if (builtSection.isEmpty) {
@@ -120,7 +115,7 @@ class IssueBuilder {
 
       return section.build().replaceFirst(section.placeholder!, output);
     } else if (section.isDrivenBy == DrivenBy.user) {
-      return await promptUserInputViaFile(
+      return promptUserInputViaFile(
         section.build(),
         config.issueFileName,
       );
@@ -130,12 +125,12 @@ class IssueBuilder {
     }
   }
 
-  void _introductoryHelp() {
+  void introductoryHelp() {
     stdout.writeln(kIntroductoryHelpText);
     interact.Confirm(prompt: 'Ready?').interact();
   }
 
-  void _closingComments() {
+  void closingComments() {
     stdout.writeln(kClosingCommentsText);
   }
 }

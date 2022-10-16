@@ -24,7 +24,7 @@ test content''');
 
   group('IssueSection.commandDriven', () {
     test('happy case', () {
-      final section = TestCommandDrivenIssueSection(
+      var section = TestCommandDrivenIssueSection(
         placeholder: 'placeholder',
         content: 'this is a placeholder',
       );
@@ -36,39 +36,43 @@ test content''');
 
     test('throws when placeholder is empty', () {
       expect(
-          () => TestCommandDrivenIssueSection(
-                placeholder: '',
-                content: 'this is a placeholder',
-              ),
-          throwsA(isA<AssertionError>()));
+        () => TestCommandDrivenIssueSection(
+          placeholder: '',
+          content: 'this is a placeholder',
+        ),
+        throwsA(isA<AssertionError>()),
+      );
     });
 
     test('throws when command is empty', () {
       expect(
-          () => TestCommandDrivenIssueSection(
-                placeholder: 'placeholder',
-                content: 'this is a placeholder',
-                command: [],
-              ),
-          throwsA(isA<AssertionError>()));
+        () => TestCommandDrivenIssueSection(
+          placeholder: 'placeholder',
+          content: 'this is a placeholder',
+          command: [],
+        ),
+        throwsA(isA<AssertionError>()),
+      );
     });
 
     test('throws when content does not contain placeholder', () {
       expect(
-          () => TestCommandDrivenIssueSection(
-                placeholder: 'placeholder',
-                content: 'this is a content',
-              ),
-          throwsA(isA<AssertionError>()));
+        () => TestCommandDrivenIssueSection(
+          placeholder: 'placeholder',
+          content: 'this is a content',
+        ),
+        throwsA(isA<AssertionError>()),
+      );
     });
 
     test('throws when content contains placeholder more than once', () {
       expect(
-          () => TestCommandDrivenIssueSection(
-                placeholder: 'placeholder',
-                content: 'this is a placeholder placeholder',
-              ),
-          throwsA(isA<AssertionError>()));
+        () => TestCommandDrivenIssueSection(
+          placeholder: 'placeholder',
+          content: 'this is a placeholder placeholder',
+        ),
+        throwsA(isA<AssertionError>()),
+      );
     });
   });
 
@@ -113,7 +117,7 @@ test details
   });
 
   test('DetailsIssueSection.commandDriven', () {
-    final section = TestCommandDrivenDetailsIssueSection();
+    var section = TestCommandDrivenDetailsIssueSection();
     expect(section.isDrivenBy, DrivenBy.command);
     expect(section.content, '''
 <details>

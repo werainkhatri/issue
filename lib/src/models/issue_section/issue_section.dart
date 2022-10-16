@@ -1,15 +1,9 @@
 import 'package:equatable/equatable.dart';
-import 'package:issue/src/utils.dart';
+import '../../utils.dart';
 
-export 'user_driven_issue_section.dart';
-export 'command_driven_issue_section.dart';
-export 'none_issue_section.dart';
-
-enum DrivenBy {
-  user,
-  command,
-  none;
-}
+part 'command_driven_issue_section.dart';
+part 'none_issue_section.dart';
+part 'user_driven_issue_section.dart';
 
 /// A particular section of the issue body, defined by its structure.
 ///
@@ -24,23 +18,7 @@ enum DrivenBy {
 ///   );
 /// }
 /// ```
-abstract class IssueSection extends Equatable {
-  /// Optional heading for the section. Supports markdown formatting.
-  ///
-  /// Recommended to include markdown formatting like `### Issue` or `**Issue**`.
-  final String? heading;
-
-  /// Content of the section. Supports markdown formatting.
-  final String content;
-
-  final DrivenBy isDrivenBy;
-
-  final String? placeholder;
-
-  final List<String>? command;
-
-  final String? _prompt;
-
+class IssueSection extends Equatable {
   const IssueSection.userDriven({
     required this.content,
     this.heading,
@@ -51,23 +29,6 @@ abstract class IssueSection extends Equatable {
         command = null,
         assert(content != '', '[content] cannot be empty.');
 
-  IssueSection.commandDriven({
-    required this.command,
-    required this.content,
-    this.heading,
-    required this.placeholder,
-  })  : _prompt = null,
-        isDrivenBy = DrivenBy.command,
-        assert(placeholder != null && placeholder.isNotEmpty,
-            'placeholder cannot be empty'),
-        assert(command != null && command.isNotEmpty,
-            '[command] must not be empty.'),
-        assert(content.contains(placeholder!),
-            '[content] must contain [placeholder].'),
-        assert(
-            content.indexOf(placeholder!) == content.lastIndexOf(placeholder),
-            '[content] must contain [placeholder] only once.');
-
   const IssueSection.noneDriven({this.heading, required this.content})
       : isDrivenBy = DrivenBy.none,
         placeholder = null,
@@ -75,17 +36,68 @@ abstract class IssueSection extends Equatable {
         _prompt = null,
         assert(content != '', '[content] cannot be empty.');
 
-  /// Builds the section with heading, if present, and content.
+  IssueSection.commandDriven({
+    required this.command,
+    required this.content,
+    this.heading,
+    required this.placeholder,
+  })  : _prompt = null,
+        isDrivenBy = DrivenBy.command,
+        assert(
+          placeholder != null && placeholder.isNotEmpty,
+          'placeholder cannot be empty',
+        ),
+        assert(
+          command != null && command.isNotEmpty,
+          '[command] must not be empty.',
+        ),
+        assert(
+          content.contains(placeholder!),
+          '[content] must contain [placeholder].',
+        ),
+        assert(
+          content.indexOf(placeholder!) == content.lastIndexOf(placeholder),
+          '[content] must contain [placeholder] only once.',
+        );
+
+  /// Optional heading for the section. Supports markdown formatting.
   ///
-  /// This is what will be shown to the user.
-  String build() => '${heading != null ? '$heading\n\n' : ''}$content';
+  /// Recommended to include markdown formatting like `### Issue`, `**Issue**`.
+  final String? heading;
 
-  @override
-  List<Object?> get props =>
-      [heading, content, isDrivenBy, placeholder, command];
+  /// Content of the section. Supports markdown formatting.
+  final String content;
 
-  @override
-  bool? get stringify => true;
+  /// Who is responsible for populating the section.
+  final DrivenBy isDrivenBy;
+
+  /// Text that is contained in the [content] exactly once and is to be
+  /// replaced by the output of the [command].
+  ///
+  /// For example:
+  /// ```dart
+  /// class SampleIssueSection extends IssueSection {
+  ///  const SampleIssueSection() : super.commandDriven(
+  ///   heading: '### Sample Heading',
+  ///   content: 'Sample Content',
+  ///   command: ['echo', "'Hello World!'"],
+  ///   commandPlaceholder: 'Sample Command Output',
+  ///  );
+  /// }
+  /// ```
+  ///
+  /// The above [SampleIssueSection] will be rendered as:
+  /// ```markdown
+  /// ### Sample Heading
+  /// Sample Content
+  /// ```
+  ///
+  /// This will be ignored if [isDrivenBy] is **not** [DrivenBy.command].
+  final String? placeholder;
+
+  final List<String>? command;
+
+  final String? _prompt;
 
   /// To be displayed in the CLI when the user is prompted to enter the
   /// section's content in the file.
@@ -117,23 +129,34 @@ abstract class IssueSection extends Equatable {
 
     return name;
   }
+
+  @override
+  List<Object?> get props =>
+      [heading, content, isDrivenBy, placeholder, command];
+
+  @override
+  bool? get stringify => true;
+
+  /// Builds the section with heading, if present, and content.
+  ///
+  /// This is what will be shown to the user.
+  String build() => '${heading != null ? '$heading\n\n' : ''}$content';
 }
 
-abstract class DetailsIssueSection extends IssueSection {
-  final String summary;
-  final String details;
-
+class DetailsIssueSection extends IssueSection {
   const DetailsIssueSection.userDriven({
     super.heading,
     required this.summary,
     required this.details,
     super.prompt,
-  }) : super.userDriven(content: '''
+  }) : super.userDriven(
+          content: '''
 <details>
 <summary>$summary</summary>
 
 $details
-</details>''');
+</details>''',
+        );
 
   DetailsIssueSection.commandDriven({
     super.heading,
@@ -141,15 +164,49 @@ $details
     required super.placeholder,
     required this.summary,
     required this.details,
-  })  : assert(details.contains(placeholder!),
-            '[details] must contain [placeholder].'),
+  })  : assert(
+          details.contains(placeholder!),
+          '[details] must contain [placeholder].',
+        ),
         assert(
-            details.indexOf(placeholder!) == details.lastIndexOf(placeholder),
-            '[details] must contain [placeholder] only once.'),
-        super.commandDriven(content: '''
+          details.indexOf(placeholder!) == details.lastIndexOf(placeholder),
+          '[details] must contain [placeholder] only once.',
+        ),
+        super.commandDriven(
+          content: '''
 <details>
 <summary>$summary</summary>
 
 $details
-</details>''');
+</details>''',
+        );
+
+  /// Title of the section that'll go into the <summary> tag.
+  final String summary;
+
+  /// Content of the section that'll go into the <details> tag.
+  final String details;
+}
+
+/// Who is responsible for populating this section.
+enum DrivenBy {
+  /// Specifies that the user will be responsible for populating this section.
+  ///
+  /// This implies that the user will be prompted to enter and will affect the
+  /// progress bar of the issue build process.
+  user,
+
+  /// Specifies that a command will be responsible for populating this section.
+  ///
+  /// This implies that the user will not be prompted to enter and will not
+  /// affect the progress of the issue build process, rather will be executed
+  /// in a separate loading step.
+  command,
+
+  /// Specifies that no one will be responsible for populating this section. In
+  /// other words, this section will be pre-populated.
+  ///
+  /// It can be used as a cosmetic section, containing a markdown comment
+  /// (<!-- -->) or divider (---), etc.
+  none;
 }

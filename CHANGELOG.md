@@ -1,5 +1,12 @@
+## 0.0.3
+
+- Refactor `IssueTemplate.titlePlaceholder` to `IssueTemplate.titleTemplate`.
+- Document a few public APIs.
+- Add few lints.
+
 ## 0.0.2
 
+- Handle inter-IssueSection spacing in IssueBuilder.
 - Add example, demo video and CreditsIssueSection.
 - Improve README.
 

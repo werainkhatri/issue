@@ -1,9 +1,47 @@
-import 'package:issue/src/models/issue_section/issue_section.dart';
+import '../constants.dart';
+import 'issue_section/issue_section.dart';
 
-abstract class IssueTemplate {
-  final String titlePlaceholder;
+/// A customizable template of an issue.
+///
+/// See also:
+///
+/// - [SimpleBugReportIssueTemplate], which uses a conventional template.
+/// - [FlutterBugReportIssueTemplate], which is same as
+///    [SimpleBugReportIssueTemplate] but adds [FlutterDoctorIssueSection].
+class IssueTemplate {
+  /// Creates a new [IssueTemplate].
+  ///
+  /// [requiresFlutterApp] and [credits] detault to `false`.
+  const IssueTemplate({
+    this.assignees = const [],
+    this.heading,
+    this.labels = const [],
+    this.sections = const [],
+    this.requiresFlutterApp = false,
+    this.titleTemplate = kTitleTemplateDefault,
+    this.titlePrompt = kTitlePromptDefault,
+    this.credits = false,
+  });
+
+  /// Acts as a template for the issue title, displayed in the file prompt.
+  ///
+  /// See also:
+  ///
+  /// - [IssueTemplate.titlePrompt]
+  final String titleTemplate;
+
+  /// To be displayed in the CLI when the user is prompted to enter the
+  /// issue title in the file.
+  ///
+  /// See also:
+  ///
+  /// - [IssueTemplate.titleTemplate]
   final String titlePrompt;
+
+  /// List of labels to be applied to the issue when it is submitted.
   final List<String> labels;
+
+  /// List of assignees to be assigned to the issue when it is submitted.
   final List<String> assignees;
 
   /// Optional heading for the issue body.
@@ -12,30 +50,28 @@ abstract class IssueTemplate {
   /// Sections of the issue.
   final List<IssueSection> sections;
 
+  /// Whether the template requires a Flutter app to be present in the
+  /// current working directory.
   final bool requiresFlutterApp;
 
   /// Whether to add [CreditsIssueSection] at the end of the issue.
   ///
   /// Defaults to `false`, obviously.
   final bool credits;
-
-  const IssueTemplate({
-    this.assignees = const [],
-    this.heading,
-    this.labels = const [],
-    this.sections = const [],
-    this.requiresFlutterApp = false,
-    this.titlePlaceholder = 'Please enter a suitable title.',
-    this.titlePrompt = 'Issue title',
-    this.credits = false,
-  });
 }
 
+/// A simple bug report issue template.
+///
+/// See also:
+///
+/// - [IssueTemplate], which is the base class for all issue templates.
+/// - [FlutterBugReportIssueTemplate], which is same as this along with
+///   [FlutterDoctorIssueSection].
 class SimpleBugReportIssueTemplate extends IssueTemplate {
   SimpleBugReportIssueTemplate({
     super.assignees,
     super.labels,
-    super.titlePlaceholder,
+    super.titleTemplate,
     super.titlePrompt,
     super.credits,
   }) : super(
@@ -57,14 +93,20 @@ class SimpleBugReportIssueTemplate extends IssueTemplate {
         );
 }
 
+/// A bug report issue template for Flutter apps. Along with the conventional
+/// issue template, it also attaches the output for `flutter doctor`.
+///
+/// See also:
+///
+/// - [IssueTemplate], which is the base class for all issue templates.
+/// - [SimpleBugReportIssueTemplate], which is same as this but without
+///   [FlutterDoctorIssueSection].
 class FlutterBugReportIssueTemplate extends IssueTemplate {
-  final bool isFlutterDoctorVerbose;
-
   FlutterBugReportIssueTemplate({
     super.assignees,
     super.heading,
     super.labels,
-    super.titlePlaceholder,
+    super.titleTemplate,
     super.titlePrompt,
     this.isFlutterDoctorVerbose = false,
     super.credits,
@@ -87,4 +129,9 @@ class FlutterBugReportIssueTemplate extends IssueTemplate {
           ],
           requiresFlutterApp: true,
         );
+
+  /// If `flutter doctor` should be run in verbose mode.
+  ///
+  /// Defaults to `false`.
+  final bool isFlutterDoctorVerbose;
 }

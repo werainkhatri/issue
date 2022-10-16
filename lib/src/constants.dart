@@ -1,4 +1,5 @@
 const kIssueFile = '.issue.md';
+
 const kIntroductoryHelpText = '''
 Welcome to "issue" 👋!
 
@@ -8,9 +9,13 @@ There will be a series of steps each consisting of a file prompt and a progress 
 
 To cancel anytime, clear the contents of the file (Ctrl + A, then Backspace) and close it, OR press Ctrl + C in the CLI.
 ''';
+
 const kClosingCommentsText = '''
 
 A browser window will now open for you to press "Submit new issue".
 
 Thank you for using "issue"! Hope you had fun. 😊
 ''';
+
+const kTitleTemplateDefault = 'Please enter a suitable title.';
+const kTitlePromptDefault = 'Issue title';

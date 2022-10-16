@@ -3,38 +3,42 @@ import 'package:test/test.dart';
 
 void main() {
   test(SimpleBugReportIssueTemplate, () {
-    final template = SimpleBugReportIssueTemplate();
+    var template = SimpleBugReportIssueTemplate();
     expect(template.heading, 'Bug Report');
     expect(template.assignees, []);
     expect(template.labels, []);
     expect(template.sections, <IssueSection>[
-      CombinedIssueSection(sections: [
-        DescriptionIssueSection(),
-        StepsToReproduceIssueSection(),
-        ExpectedBehaviorIssueSection(),
-        ActualResultsIssueSection(),
-      ]),
+      CombinedIssueSection(
+        sections: [
+          DescriptionIssueSection(),
+          StepsToReproduceIssueSection(),
+          ExpectedBehaviorIssueSection(),
+          ActualResultsIssueSection(),
+        ],
+      ),
       SampleDartCodeIssueSection(),
       DividerIssueSection(),
       AdditionalContextIssueSection(),
     ]);
     expect(template.requiresFlutterApp, false);
-    expect(template.titlePlaceholder, 'Please enter a suitable title.');
+    expect(template.titleTemplate, 'Please enter a suitable title.');
     expect(template.titlePrompt, 'Issue title');
   });
 
   test(FlutterBugReportIssueTemplate, () {
-    final template = FlutterBugReportIssueTemplate();
+    var template = FlutterBugReportIssueTemplate();
     expect(template.assignees, []);
     expect(template.heading, null);
     expect(template.labels, []);
     expect(template.sections, <IssueSection>[
-      CombinedIssueSection(sections: [
-        DescriptionIssueSection(),
-        StepsToReproduceIssueSection(),
-        ExpectedBehaviorIssueSection(),
-        ActualResultsIssueSection(),
-      ]),
+      CombinedIssueSection(
+        sections: [
+          DescriptionIssueSection(),
+          StepsToReproduceIssueSection(),
+          ExpectedBehaviorIssueSection(),
+          ActualResultsIssueSection(),
+        ],
+      ),
       SampleDartCodeIssueSection(),
       DividerIssueSection(),
       AdditionalContextIssueSection(),
@@ -42,7 +46,7 @@ void main() {
       FlutterDoctorIssueSection(),
     ]);
     expect(template.requiresFlutterApp, true);
-    expect(template.titlePlaceholder, 'Please enter a suitable title.');
+    expect(template.titleTemplate, 'Please enter a suitable title.');
     expect(template.titlePrompt, 'Issue title');
   });
 }

@@ -18,7 +18,9 @@ void main() {
       template: '--bug-report.md',
     );
 
-    expect(tracker.customParameters,
-        {'sample': 'parameter', 'template': '--bug-report.md'});
+    expect(
+      tracker.customParameters,
+      {'sample': 'parameter', 'template': '--bug-report.md'},
+    );
   });
 }

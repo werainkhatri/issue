@@ -12,6 +12,9 @@ and the Flutter guide for
 -->
 # issue
 
+[![pub package](https://img.shields.io/pub/v/issue.svg)](https://pub.dev/packages/issue)
+[![pub points](https://img.shields.io/pub/points/issue?color=2E8B57&label=pub%20points)](https://pub.dev/packages/issue/score)
+
 A tool to help cli package authors make raising issues like bug reports more
 interactive for their users.
 
@@ -19,8 +22,8 @@ interactive for their users.
 
 - Interactive file based prompts for great UX.
 - Ability to break the issue body into separate customizable user-prompts.
+- Supports executing cli commands to collect system / project data, like `flutter doctor`.
 - Customizable Issue Tracker. Supports GitHub out-of-the-box (obviously).
-- Supports running cli commands to collect system data, like `flutter doctor`.
 
 ## Demo
 
@@ -53,24 +56,3 @@ void main(List<String> args) async {
   }
 }
 ```
-
-<details>
-<summary>WIP</summary>
-
-- test entire flow in linux and windows.
-- support for custom editor as per package user / end user's choice. use [this](https://www.kevinkuszyk.com/2016/03/08/git-tips-2-change-editor-for-interactive-git-rebase/) to get the commands for all.
-    - feature for end user to select an editor from available editors from the terminal at runtime.
-- add customizability for package user to choose if a section should have a interact.Choose prompt before the file prompt.
-- find out if the prompt handler function (that uses Process) can be mocked so that it can be tested e2e.
-- add custom prompt text support for command driven issue sections.
-- pretify using ansi_styles.
-- find out and handle the max url length, if any.
-- see if downloading and parsing a github issue template would work.
-- find how to handle exceptions with nice stdout w/o stacktrace.
-- make publishable
-  - document public APIs.
-- rename titlePlaceholder to titleTemplate and document difference b/w it and titlePrompt.
-- add customizability for which template to be used based on user choice. User can choose which type of issue is to be raised (bug, feature request, etc) and the the template is decided.
-- "Steps to reproduce" should mention if there's a Code Sample step coming up.
-- move to [melos](https://melos.invertase.dev/getting-started)?.
-</details>
