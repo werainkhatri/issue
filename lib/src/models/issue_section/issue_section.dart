@@ -27,6 +27,7 @@ class IssueSection extends Equatable {
         isDrivenBy = DrivenBy.user,
         placeholder = null,
         command = null,
+        requiresFlutterProject = false,
         assert(content != '', '[content] cannot be empty.');
 
   const IssueSection.noneDriven({this.heading, required this.content})
@@ -34,6 +35,7 @@ class IssueSection extends Equatable {
         placeholder = null,
         command = null,
         _prompt = null,
+        requiresFlutterProject = false,
         assert(content != '', '[content] cannot be empty.');
 
   IssueSection.commandDriven({
@@ -41,6 +43,7 @@ class IssueSection extends Equatable {
     required this.content,
     this.heading,
     required this.placeholder,
+    this.requiresFlutterProject = false,
   })  : _prompt = null,
         isDrivenBy = DrivenBy.command,
         assert(
@@ -64,6 +67,11 @@ class IssueSection extends Equatable {
   ///
   /// Recommended to include markdown formatting like `### Issue`, `**Issue**`.
   final String? heading;
+
+  /// List of executable and arguments to execute.
+  ///
+  /// Replaces [placeholder] with the output of this command in [content].
+  final List<String>? command;
 
   /// Content of the section. Supports markdown formatting.
   final String content;
@@ -95,7 +103,12 @@ class IssueSection extends Equatable {
   /// This will be ignored if [isDrivenBy] is **not** [DrivenBy.command].
   final String? placeholder;
 
-  final List<String>? command;
+  /// Whether the [command] requires a Flutter project to be present in the
+  /// current working directory, like `flutter analyze`.
+  ///
+  /// Defaults to `false` and is ignored if [isDrivenBy] is **not**
+  /// [DrivenBy.command].
+  final bool requiresFlutterProject;
 
   final String? _prompt;
 

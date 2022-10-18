@@ -7,7 +7,7 @@ void main() {
       var section = FlutterDoctorIssueSection();
       expect(section.content, '''
 <details>
-<summary>Flutter Doctor</summary>
+<summary>flutter doctor</summary>
 
 ```bash
 PASTE FLUTTER DOCTOR OUTPUT HERE
@@ -20,7 +20,7 @@ PASTE FLUTTER DOCTOR OUTPUT HERE
       var section = FlutterDoctorIssueSection(verbose: true);
       expect(section.content, '''
 <details>
-<summary>Flutter Doctor</summary>
+<summary>flutter doctor -v</summary>
 
 ```bash
 PASTE FLUTTER DOCTOR OUTPUT HERE

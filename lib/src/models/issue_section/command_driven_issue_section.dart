@@ -3,9 +3,9 @@ part of 'issue_section.dart';
 class FlutterDoctorIssueSection extends DetailsIssueSection {
   FlutterDoctorIssueSection({
     super.heading = '### Flutter Doctor',
-    bool verbose = false,
+    this.verbose = false,
   }) : super.commandDriven(
-          summary: 'Flutter Doctor',
+          summary: 'flutter doctor${verbose ? ' -v' : ''}',
           command: [
             'flutter',
             'doctor',
@@ -18,5 +18,13 @@ $kPlaceholder
 ```''',
         );
 
+  /// Whether to run `flutter doctor` in verbose mode.
+  ///
+  /// Defaults to `false`.
+  final bool verbose;
+
   static const kPlaceholder = 'PASTE FLUTTER DOCTOR OUTPUT HERE';
+
+  @override
+  List<Object?> get props => [super.props, verbose];
 }

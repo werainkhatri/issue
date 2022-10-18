@@ -11,13 +11,12 @@ import 'issue_section/issue_section.dart';
 class IssueTemplate {
   /// Creates a new [IssueTemplate].
   ///
-  /// [requiresFlutterApp] and [credits] detault to `false`.
+  /// [credits] detault to `false`.
   const IssueTemplate({
     this.assignees = const [],
     this.heading,
     this.labels = const [],
     this.sections = const [],
-    this.requiresFlutterApp = false,
     this.titleTemplate = kTitleTemplateDefault,
     this.titlePrompt = kTitlePromptDefault,
     this.credits = false,
@@ -49,10 +48,6 @@ class IssueTemplate {
 
   /// Sections of the issue.
   final List<IssueSection> sections;
-
-  /// Whether the template requires a Flutter app to be present in the
-  /// current working directory.
-  final bool requiresFlutterApp;
 
   /// Whether to add [CreditsIssueSection] at the end of the issue.
   ///
@@ -94,7 +89,7 @@ class SimpleBugReportIssueTemplate extends IssueTemplate {
 }
 
 /// A bug report issue template for Flutter apps. Along with the conventional
-/// issue template, it also attaches the output for `flutter doctor`.
+/// issue template, it also attaches the output for `flutter doctor -v`.
 ///
 /// See also:
 ///
@@ -102,13 +97,16 @@ class SimpleBugReportIssueTemplate extends IssueTemplate {
 /// - [SimpleBugReportIssueTemplate], which is same as this but without
 ///   [FlutterDoctorIssueSection].
 class FlutterBugReportIssueTemplate extends IssueTemplate {
+  /// Creates a new [FlutterBugReportIssueTemplate].
+  ///
+  /// [isFlutterDoctorVerbose] defaults to `true`.
   FlutterBugReportIssueTemplate({
     super.assignees,
     super.heading,
     super.labels,
     super.titleTemplate,
     super.titlePrompt,
-    this.isFlutterDoctorVerbose = false,
+    this.isFlutterDoctorVerbose = true,
     super.credits,
   }) : super(
           sections: [
@@ -127,7 +125,6 @@ class FlutterBugReportIssueTemplate extends IssueTemplate {
             DividerIssueSection(),
             FlutterDoctorIssueSection(verbose: isFlutterDoctorVerbose),
           ],
-          requiresFlutterApp: true,
         );
 
   /// If `flutter doctor` should be run in verbose mode.

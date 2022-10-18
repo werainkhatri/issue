@@ -8,7 +8,8 @@ class _IssueBuilder {
 
   /// Builds an issue from the given [config] and returns the URI of the issue.
   Future<Uri> build() async {
-    if (config.template.requiresFlutterApp) {
+    if (config.template.sections
+        .any((element) => element.requiresFlutterProject)) {
       assertFlutterApp(Directory.current);
     }
 

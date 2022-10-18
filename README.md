@@ -38,7 +38,7 @@ import 'package:issue/issue.dart';
 
 void main(List<String> args) async {
   IssueConfig config = IssueConfig(
-    template: SimpleBugReportIssueTemplate(
+    template: FlutterBugReportIssueTemplate(
       assignees: ['werainkhatri'],
       labels: ['bug'],
       giveCredits: true,

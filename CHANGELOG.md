@@ -1,3 +1,9 @@
+## 0.0.4
+
+- Removed `IssueTemplate.requiresFlutterApp`.
+- Added `IssueSection.requiresFlutterProject`.
+- Replaced template used in example/issue.dart and README.md to `FlutterBugReportIssueTemplate`.
+
 ## 0.0.3
 
 - Refactor `IssueTemplate.titlePlaceholder` to `IssueTemplate.titleTemplate`.

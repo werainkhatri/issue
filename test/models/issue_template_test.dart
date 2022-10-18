@@ -20,7 +20,6 @@ void main() {
       DividerIssueSection(),
       AdditionalContextIssueSection(),
     ]);
-    expect(template.requiresFlutterApp, false);
     expect(template.titleTemplate, 'Please enter a suitable title.');
     expect(template.titlePrompt, 'Issue title');
   });
@@ -43,9 +42,8 @@ void main() {
       DividerIssueSection(),
       AdditionalContextIssueSection(),
       DividerIssueSection(),
-      FlutterDoctorIssueSection(),
+      FlutterDoctorIssueSection(verbose: true),
     ]);
-    expect(template.requiresFlutterApp, true);
     expect(template.titleTemplate, 'Please enter a suitable title.');
     expect(template.titlePrompt, 'Issue title');
   });
